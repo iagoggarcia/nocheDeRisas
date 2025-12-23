@@ -250,6 +250,16 @@ input[type=number] {
     pointer-events: auto !important; /* IMPORTANTE: para poder escribir */
 }
 
+.player-name-input::placeholder {
+    color: rgba(0, 242, 255, 0.3);
+    font-size: 0.9rem;
+}
+
+.player-name-input:focus {
+    background: rgba(0, 242, 255, 0.1) !important;
+    border-color: var(--neon-cyan) !important;
+}
+
 /* Scrollbar con estilo neón */
 #names-container::-webkit-scrollbar { width: 4px; }
 #names-container::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }

@@ -20,7 +20,6 @@
     <div class="main-container">
         <div id="setup-screen">            
             <label>Número de Jugadores</label>
-            
             <div class="player-selector">
                 <button class="selector-btn" onclick="changePlayers(-1)">-</button>
                 <input type="number" id="total-players" value="4" min="3" max="20" readonly>
@@ -28,6 +27,13 @@
             </div>
 
             <div id="names-container" style="margin-bottom: 20px;"></div>
+
+            <label>Número de Impostores</label>
+            <div class="player-selector" style="margin-bottom: 30px;">
+                <button class="selector-btn" onclick="changeImpostors(-1)">-</button>
+                <input type="text" id="total-impostors" value="1" readonly>
+                <button class="selector-btn" onclick="changeImpostors(1)">+</button>
+            </div>
             
             <button class="btn-main" onclick="startGame()">INICIAR PARTIDA</button>
         </div>
@@ -86,10 +92,39 @@
             }
         }
 
-        function startGame() {
+        function changeImpostors(delta) {
+            const input = document.getElementById('total-impostors');
             const numPlayers = parseInt(document.getElementById('total-players').value);
             
-            // Guardamos los nombres reales
+            // Si es "RANDOM", al pulsar lo reseteamos a número
+            let current = input.value === "?" ? 0 : parseInt(input.value);
+            let newValue = current + delta;
+
+            // Límites: mínimo 1, máximo (jugadores - 1). Si pasas del máximo, ponemos RANDOM (?)
+            if (newValue < 1) {
+                input.value = "?"; // Representa Aleatorio
+            } else if (newValue >= numPlayers) {
+                input.value = numPlayers - 1; // No pueden ser todos impostores
+            } else {
+                input.value = newValue;
+            }
+        }
+
+        // Modifica la función startGame para repartir varios impostores
+        function startGame() {
+            const numPlayers = parseInt(document.getElementById('total-players').value);
+            const impostorInput = document.getElementById('total-impostors').value;
+            
+            // Determinar cuántos impostores habrá
+            let numImpostors;
+            if (impostorInput === "?") {
+                // Aleatorio entre 1 y la mitad de los jugadores
+                numImpostors = Math.floor(Math.random() * (numPlayers / 2)) + 1;
+            } else {
+                numImpostors = parseInt(impostorInput);
+            }
+
+            // Guardar nombres
             playerNames = [];
             for (let i = 0; i < numPlayers; i++) {
                 const val = document.getElementById(`name-${i}`).value;
@@ -97,10 +132,19 @@
             }
             
             const secretWord = BIBLIOTECA_PALABRAS[Math.floor(Math.random() * BIBLIOTECA_PALABRAS.length)];
-            const impostorPos = Math.floor(Math.random() * numPlayers);
-
+            
+            // CREAR LISTA DE ROLES
             playersData = Array(numPlayers).fill(secretWord);
-            playersData[impostorPos] = "IMPOSTOR";
+            
+            // Repartir impostores en posiciones aleatorias únicas
+            let assigned = 0;
+            while (assigned < numImpostors) {
+                let pos = Math.floor(Math.random() * numPlayers);
+                if (playersData[pos] !== "IMPOSTOR") {
+                    playersData[pos] = "IMPOSTOR";
+                    assigned++;
+                }
+            }
 
             document.getElementById('setup-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
