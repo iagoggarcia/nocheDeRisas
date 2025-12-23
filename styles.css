@@ -15,10 +15,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 100vh;
     margin: 0;
-    overflow: hidden;
+    padding-top: 20px; /* Dale espacio arriba */
+    overflow-x: hidden; /* Solo bloquea el scroll lateral */
+    overflow-y: auto;   /* Permite scroll vertical */
     position: relative;
 }
 
@@ -93,14 +95,14 @@ h1 {
 .main-container {
     background: var(--card-bg);
     backdrop-filter: blur(8px);
-    width: 90%;
+    width: 90%; /* Esto ya ayuda al responsive */
     max-width: 400px;
-    padding: 30px;
+    padding: 20px; /* Un poco menos de padding para móviles */
     border-radius: 25px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
     z-index: 10;
-    text-align: center;
+    margin-bottom: 50px; /* Espacio abajo para que no choque con el borde */
 }
 
 label {
@@ -251,3 +253,13 @@ input[type=number] {
 /* Scrollbar con estilo neón */
 #names-container::-webkit-scrollbar { width: 4px; }
 #names-container::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
+
+/* Para pantallas de móvil pequeñas */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    .header-section img {
+        width: 150px; /* Imagen más pequeña en móvil */
+    }
+}
