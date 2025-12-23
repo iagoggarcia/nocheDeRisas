@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noche CG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="styles.css" rel="stylesheet">
+    <script src="Palabras.js"></script>
+
+</head>
+<body>
+
+    <div class="header-section">
+        <img src="images/unnamed.jpg" width="300" style="filter: drop-shadow(0 0 10px var(--neon-cyan));">
+        <h1>IMPOSTOR CG</h1>
+    </div>
+
+    <div class="main-container">
+        <div id="setup-screen">            
+            <label>Número de Jugadores</label>
+            
+            <div class="player-selector">
+                <button class="selector-btn" onclick="changePlayers(-1)">-</button>
+                <input type="number" id="total-players" value="4" min="3" max="20" readonly>
+                <button class="selector-btn" onclick="changePlayers(1)">+</button>
+            </div>
+
+            <div id="names-container" style="margin-bottom: 20px;"></div>
+            
+            <button class="btn-main" onclick="startGame()">INICIAR PARTIDA</button>
+        </div>
+
+        <div id="game-screen" class="hidden">
+            <div class="player-info" id="player-title">JUGADOR 1</div>
+            <p style="text-align: center; color: var(--text-gray);">Pasa el móvil y pulsa para ver tu rol.</p>
+            
+            <div id="word-card" class="animate__animated"></div>
+            
+            <button id="action-btn" class="btn-main" onclick="handleTurn()">VER SECRETO</button>
+            <p class="hint-text">No dejes que nadie más vea la pantalla.</p>
+        </div>
+    </div>
+
+    <script>
+        let playersData = [];
+        let playerNames = []; // lista para guardar nombres
+        let currentIndex = 0;
+        let isRevealed = false;
+
+        // Llamamos a esta función al cargar para que salgan los inputs iniciales
+        window.onload = updateNameInputs;
+
+        function changePlayers(delta) {
+            const input = document.getElementById('total-players');
+            let newValue = parseInt(input.value) + delta;
+            if (newValue >= 3 && newValue <= 20) {
+                input.value = newValue;
+                updateNameInputs(); // Actualizamos inputs de nombres al cambiar número
+            }
+        }
+
+        function updateNameInputs() {
+            const count = parseInt(document.getElementById('total-players').value);
+            const container = document.getElementById('names-container');
+            
+            // Guardamos los nombres que ya estén escritos antes de limpiar
+            const currentNames = [];
+            for(let i=0; i < 20; i++) {
+                const el = document.getElementById(`name-${i}`);
+                if(el) currentNames.push(el.value);
+            }
+
+            container.innerHTML = ''; 
+
+            for (let i = 1; i <= count; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `Nombre Jugador ${i}`;
+                input.className = 'player-name-input';
+                input.id = `name-${i-1}`;
+                // Si ya había un nombre escrito para esta posición, lo mantenemos
+                input.value = currentNames[i-1] || ''; 
+                container.appendChild(input);
+            }
+        }
+
+        function startGame() {
+            const numPlayers = parseInt(document.getElementById('total-players').value);
+            
+            // Guardamos los nombres reales
+            playerNames = [];
+            for (let i = 0; i < numPlayers; i++) {
+                const val = document.getElementById(`name-${i}`).value;
+                playerNames.push(val.trim() || `Jugador ${i + 1}`);
+            }
+            
+            const secretWord = BIBLIOTECA_PALABRAS[Math.floor(Math.random() * BIBLIOTECA_PALABRAS.length)];
+            const impostorPos = Math.floor(Math.random() * numPlayers);
+
+            playersData = Array(numPlayers).fill(secretWord);
+            playersData[impostorPos] = "IMPOSTOR";
+
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            showTurn();
+        }
+
+        function showTurn() {
+            isRevealed = false;
+            // AQUÍ USAMOS EL NOMBRE REAL
+            document.getElementById('player-title').innerText = playerNames[currentIndex].toUpperCase();
+            const card = document.getElementById('word-card');
+            card.style.display = 'none';
+            card.className = 'animate__animated';
+            document.getElementById('action-btn').innerText = 'VER SECRETO';
+        }
+
+        function handleTurn() {
+            const card = document.getElementById('word-card');
+            const btn = document.getElementById('action-btn');
+
+            if (!isRevealed) {
+                // Revelar palabra
+                const content = playersData[currentIndex];
+                card.innerText = content;
+                card.style.display = 'block';
+                
+                if (content === "IMPOSTOR") {
+                    card.classList.add('card-impostor', 'animate__pulse');
+                } else {
+                    card.classList.add('card-normal', 'animate__fadeIn');
+                }
+
+                btn.innerText = 'ENTENDIDO, SIGUIENTE';
+                isRevealed = true;
+            } else {
+                // Pasar al siguiente
+                currentIndex++;
+                if (currentIndex < playersData.length) {
+                    showTurn();
+                } else {
+                    finishGame();
+                }
+            }
+        }
+
+        function finishGame() {
+        document.getElementById('game-screen').innerHTML = `
+            <h2 style="text-align:center; color: var(--neon-cyan); font-family: 'Orbitron';">¡A DEBATIR!</h2>
+            <p style="text-align:center;">Todos conocen su identidad. <br>¿Quién es el infiltrado?</p>
+            <button class="btn-main" onclick="resetGame()">NUEVA PARTIDA</button>
+        `;
+    }
+
+    function resetGame() {
+            // Reiniciamos variables de control
+            currentIndex = 0;
+            isRevealed = false;
+            playersData = [];
+
+            // Restauramos el contenido original de la pantalla de juego para la próxima vez
+            document.getElementById('game-screen').innerHTML = `
+                <div class="player-info" id="player-title">JUGADOR 1</div>
+                <p style="text-align: center; color: var(--text-gray);">Pasa el móvil y pulsa para ver tu rol.</p>
+                <div id="word-card" class="animate__animated"></div>
+                <button id="action-btn" class="btn-main" onclick="handleTurn()">VER SECRETO</button>
+                <p class="hint-text">No dejes que nadie más vea la pantalla.</p>
+            `;
+
+            // Cambiamos de pantalla volviendo al setup (los nombres siguen ahí)
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('hidden');
+        }
+    </script>
+
+    <div class="stars-container">
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+</div>
+</body>
+
+</html>
