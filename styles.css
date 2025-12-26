@@ -17,12 +17,11 @@ body {
     align-items: center;
     justify-content: flex-start;
     
-    height: 100vh;      /* Altura exacta de la pantalla */
-    width: 100vw;       /* Anchura exacta */
-    margin: 0;
-    padding: 20px 0;
-    overflow: hidden;   /* Bloquea TODO el scroll del cuerpo */
-    position: fixed;    /* Evita que el teclado o gestos muevan el fondo */
+    height: 100vh;
+    height: -webkit-fill-available; /* ajuste especial para Safari iOS */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* --- FONDO ASTRAL --- */
@@ -97,13 +96,19 @@ h1 {
     background: var(--card-bg);
     backdrop-filter: blur(8px);
     width: 90%;
-    max-height: 70vh;    /* Limitamos la altura de la tarjeta para que no se salga */
+    max-height: 85vh; 
+    margin: 10px auto;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 15px; /* Reducimos un poco el padding */
     border-radius: 25px;
-    z-index: 10;
-    overflow-y: auto;    /* Permite scroll SOLO dentro de la tarjeta si es necesario */
+    box-sizing: border-box; /* Importante para que el padding no sume tamaño */
+}
+
+#setup-screen {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Evita que el hijo empuje al padre */
 }
 
 label {
@@ -235,10 +240,11 @@ input[type=number] {
 
 /* Estilos para los nombres de cada jugador */
 #names-container {
-    flex-grow: 1;        /* Permite que use el espacio disponible */
-    overflow-y: auto;    /* Scroll interno para los nombres */
-    margin-bottom: 15px;
-    max-height: 150px;   /* Altura máxima para que no empuje el selector de impostores */
+    flex: 1; /* Esto hace que la lista de nombres use el espacio sobrante */
+    overflow-y: auto; /* Solo esta parte tendrá scroll si hay muchos nombres */
+    margin-bottom: 10px;
+    min-height: 100px; /* Asegura un espacio mínimo */
+    -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
 }
 
 .player-name-input {
@@ -269,9 +275,12 @@ input[type=number] {
 /* Para pantallas de móvil pequeñas */
 @media (max-width: 480px) {
     h1 {
-        font-size: 1.8rem;
+    font-size: 1.5rem; /* Título más pequeño para ganar espacio */
+    margin: 5px 0;
     }
     .header-section img {
-        width: 150px; /* Imagen más pequeña en móvil */
+    width: 150px; 
+    height: auto;
+    margin-bottom: 5px;
     }
 }
