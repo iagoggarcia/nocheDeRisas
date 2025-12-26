@@ -16,12 +16,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    min-height: 100vh;
+    
+    height: 100vh;      /* Altura exacta de la pantalla */
+    width: 100vw;       /* Anchura exacta */
     margin: 0;
-    padding-top: 20px; /* Dale espacio arriba */
-    overflow-x: hidden; /* Solo bloquea el scroll lateral */
-    overflow-y: auto;   /* Permite scroll vertical */
-    position: relative;
+    padding: 20px 0;
+    overflow: hidden;   /* Bloquea TODO el scroll del cuerpo */
+    position: fixed;    /* Evita que el teclado o gestos muevan el fondo */
 }
 
 /* --- FONDO ASTRAL --- */
@@ -95,14 +96,14 @@ h1 {
 .main-container {
     background: var(--card-bg);
     backdrop-filter: blur(8px);
-    width: 90%; /* Esto ya ayuda al responsive */
-    max-width: 400px;
-    padding: 20px; /* Un poco menos de padding para móviles */
+    width: 90%;
+    max-height: 70vh;    /* Limitamos la altura de la tarjeta para que no se salga */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
     border-radius: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
     z-index: 10;
-    margin-bottom: 50px; /* Espacio abajo para que no choque con el borde */
+    overflow-y: auto;    /* Permite scroll SOLO dentro de la tarjeta si es necesario */
 }
 
 label {
@@ -234,9 +235,10 @@ input[type=number] {
 
 /* Estilos para los nombres de cada jugador */
 #names-container {
-    max-height: 200px; /* Para que no se alargue infinito */
-    overflow-y: auto;  /* Scroll si hay muchos jugadores */
-    padding-right: 5px;
+    flex-grow: 1;        /* Permite que use el espacio disponible */
+    overflow-y: auto;    /* Scroll interno para los nombres */
+    margin-bottom: 15px;
+    max-height: 150px;   /* Altura máxima para que no empuje el selector de impostores */
 }
 
 .player-name-input {
