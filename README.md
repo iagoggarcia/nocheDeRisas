@@ -7,7 +7,7 @@ Una aplicación web minimalista y optimizada para móviles diseñada para jugar 
 * **Biblioteca Local:** Incluye frases y palabras personalizadas de nuestro grupo.
 * **Modo Impostor Aleatorio:** Posibilidad de configurar el número de infiltrados o dejar que la suerte decida.
 
-## 🚀 Próximas mejoras (Roadmap)
+## 🚀 Próximas mejoras
 - [ ] **Personalización Total:** Permitir que cada usuario o grupo cargue su propia lista de palabras.
 - [ ] **Identidad Visual:** Opción para subir una imagen de portada/logo personalizada.
 - [ ] **Temas Dinámicos:** Selector de colores para cambiar el acento neón de la aplicación.
