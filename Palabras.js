@@ -8,5 +8,5 @@ const BIBLIOTECA_PALABRAS = [
     "Andrupi", "Chicochicle", "Chati", "Junito", "Praga", "China", "Gorda",
     "Toromblito", "Capital", "Ruta", "Alopecia", "Juguete", "Chorizo", "Palique",
     "Giratorio", "Dona Dana", "Casa abuela Xurxo", "Michigan", "Pádel", "Among Us",
-    "Vinicius"
+    "Vinicius", "Selia", "Esteban", "Frodo"
 ];
