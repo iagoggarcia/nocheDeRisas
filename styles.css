@@ -96,19 +96,29 @@ h1 {
     background: var(--card-bg);
     backdrop-filter: blur(8px);
     width: 90%;
-    max-height: 85vh; 
-    margin: 10px auto;
+    height: 65vh; 
+    margin: 5px auto;
     display: flex;
     flex-direction: column;
-    padding: 15px; /* Reducimos un poco el padding */
+    padding: 20px;
     border-radius: 25px;
-    box-sizing: border-box; /* Importante para que el padding no sume tamaño */
+    box-sizing: border-box;
+    overflow: hidden; /* No permite que la tarjeta crezca más */
 }
 
 #setup-screen {
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Evita que el hijo empuje al padre */
+    height: 100%; /* Ocupa todo el alto del main-container */
+    overflow: hidden;
+}
+
+#names-container {
+    flex: 1; /* Esto obliga a este div a usar el espacio "sobrante" */
+    overflow-y: auto; /* Habilita el scroll interno aquí */
+    margin-bottom: 15px;
+    padding-right: 5px; /* Espacio para que la scrollbar no pise el texto */
+    -webkit-overflow-scrolling: touch;
 }
 
 label {
@@ -238,15 +248,6 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
-/* Estilos para los nombres de cada jugador */
-#names-container {
-    flex: 1; /* Esto hace que la lista de nombres use el espacio sobrante */
-    overflow-y: auto; /* Solo esta parte tendrá scroll si hay muchos nombres */
-    margin-bottom: 10px;
-    min-height: 100px; /* Asegura un espacio mínimo */
-    -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
-}
-
 .player-name-input {
     width: 100% !important;
     padding: 10px !important;
@@ -274,13 +275,19 @@ input[type=number] {
 
 /* Para pantallas de móvil pequeñas */
 @media (max-width: 480px) {
-    h1 {
-    font-size: 1.5rem; /* Título más pequeño para ganar espacio */
-    margin: 5px 0;
+    .header-section {
+        margin-bottom: 10px;
     }
     .header-section img {
-    width: 150px; 
-    height: auto;
-    margin-bottom: 5px;
+        width: 120px; 
+        height: auto;
+    }
+    h1 {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+    }
+    .main-container {
+        height: 75vh; 
+        width: 95%;
     }
 }
