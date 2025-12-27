@@ -179,7 +179,16 @@ input {
     background: rgba(255, 0, 60, 0.1);
 }
 
-.hidden { display: none; }
+.hidden { display: none !important; }
+
+#game-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Ocupa todo el espacio de la tarjeta */
+    text-align: center;
+}
 
 /* Estilo para el selector de jugadores personalizado */
 .player-selector {

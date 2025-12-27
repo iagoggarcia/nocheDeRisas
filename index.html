@@ -135,7 +135,7 @@
             
             const secretWord = BIBLIOTECA_PALABRAS[Math.floor(Math.random() * BIBLIOTECA_PALABRAS.length)];
             
-            // CREAR LISTA DE ROLES
+            // Creo la lista de roles
             playersData = Array(numPlayers).fill(secretWord);
             
             // Repartir impostores en posiciones aleatorias únicas
@@ -155,11 +155,16 @@
 
         function showTurn() {
             isRevealed = false;
-            // AQUÍ USAMOS EL NOMBRE REAL
+            // Actualizamos el nombre del jugador actual
             document.getElementById('player-title').innerText = playerNames[currentIndex].toUpperCase();
+            
             const card = document.getElementById('word-card');
-            card.style.display = 'none';
-            card.className = 'animate__animated';
+            card.innerText = ''; // Limpiamos el texto anterior
+            card.style.display = 'none'; // Ocultamos la tarjeta hasta que se pulse el botón
+            
+            // Limpiamos TODAS las clases de animación y colores previos
+            card.className = 'animate__animated'; 
+            
             document.getElementById('action-btn').innerText = 'VER SECRETO';
         }
 
@@ -168,10 +173,12 @@
             const btn = document.getElementById('action-btn');
 
             if (!isRevealed) {
-                // Revelar palabra
                 const content = playersData[currentIndex];
                 card.innerText = content;
                 card.style.display = 'block';
+                
+                // Quitamos clases viejas antes de poner las nuevas
+                card.classList.remove('card-normal', 'card-impostor', 'animate__pulse', 'animate__fadeIn');
                 
                 if (content === "IMPOSTOR") {
                     card.classList.add('card-impostor', 'animate__pulse');
@@ -182,7 +189,6 @@
                 btn.innerText = 'ENTENDIDO, SIGUIENTE';
                 isRevealed = true;
             } else {
-                // Pasar al siguiente
                 currentIndex++;
                 if (currentIndex < playersData.length) {
                     showTurn();
@@ -193,12 +199,15 @@
         }
 
         function finishGame() {
+        // innerHTML borra todo lo anterior del game-screen
         document.getElementById('game-screen').innerHTML = `
-            <h2 style="text-align:center; color: var(--neon-cyan); font-family: 'Orbitron';">¡A DEBATIR!</h2>
-            <p style="text-align:center;">Todos conocen su identidad. <br>¿Quién es el infiltrado?</p>
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+            <h2 style="text-align:center; color: var(--neon-cyan); font-family: 'Orbitron'; margin-bottom: 20px;">¡A DEBATIR!</h2>
+            <p style="text-align:center; color: var(--text-gray); margin-bottom: 30px;">Todos conocen su identidad. <br>¿Quién es el infiltrado?</p>
             <button class="btn-main" onclick="resetGame()">NUEVA PARTIDA</button>
-        `;
-    }
+        </div>
+    `;
+}
 
     function resetGame() {
             // Reiniciamos variables de control
